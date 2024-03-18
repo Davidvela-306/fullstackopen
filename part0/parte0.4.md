@@ -1,3 +1,4 @@
+#FINAL | send note to /notes
 ```mermaid
 sequenceDiagram
 participant browser
