@@ -1,5 +1,5 @@
 const total = (props) => {
-    const [first, second, third] = props.objeto_contenido_total
+    const [first, second, third] = props.objeto_contenido_total.parts
     return(
         <>
             <p>

@@ -11,8 +11,8 @@ const Part = (props) => {
 
 const Content = (props) => {  
     console.log("Content: ",props);
-    //Destructurar  props-- props.objeto_contenido es un array de objetos dentro de props (que también es un objeto)
-    const [first, second, third] = props.objeto_contenido ;  //destructuring assignment
+    //Destructurar  props-- props.objeto_contenido es un array, a su vez contiene el arr parts que contiene objetos(name,exercises)
+    const [first, second, third] = props.objeto_contenido.parts ;  //destructuring assignment
     //first = {name: "Fundamentals of React", exercises: 10}
 
     console.log("First.name: ", first.name)
