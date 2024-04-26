@@ -3,14 +3,24 @@ import { useState } from "react";
 const Button = (props) => {
   return <button onClick={props.handleClick}>{props.text}</button>;
 };
-
-// un lugar adecuado para definir un componente
-const Statistics = (props) => {
-  console.log(props);
+const StaticLine = (props) => {
   return (
     <p>
-      {props.text}: {props.statistic}
+      {props.text}: {props.value}
     </p>
+  );
+};
+const Statistics = (props) => {
+  console.log("Statistics: ", props);
+  return (
+    <>
+      <StaticLine text="good" value={props.goodVar} />
+      <StaticLine text="neutral" value={props.neutralVar} />
+      <StaticLine text="bad" value={props.badVar} />
+      <StaticLine text="total" value={props.totalVar} />
+      <StaticLine text="average" value={props.averageVar} />
+      <StaticLine text="positive" value={props.positivePercentVar} />
+    </>
   );
 };
 
@@ -39,18 +49,20 @@ const App = () => {
   return (
     <>
       <h1>give feedback</h1>
-      <Button handleClick={handleGoodClick} text={"good"} />
-      <Button handleClick={handleNeutralClick} text={"neutral"} />
+      <Button handleClick={handleGoodClick} text="good" />
+      <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text={"bad"} />
       {feedbackGiven ? (
         <>
           <h1>statics</h1>
-          <Statistics statistic={good} text={"good"} total={total} />
-          <Statistics statistic={neutral} text={"neutral"} total={total} />
-          <Statistics statistic={bad} text={"bad"} total={total} />
-          <Statistics statistic={total} text={"all"} total={total} />
-          <Statistics statistic={average} text={"average"} total={total} />
-          <Statistics statistic={positivePercent} text={"positivePercent"} />
+          <Statistics
+            goodVar={good}
+            neutralVar={neutral}
+            badVar={bad}
+            totalVar={total}
+            averageVar={average}
+            positivePercentVar={positivePercent}
+          />
         </>
       ) : (
         <p>No feedback given</p>
