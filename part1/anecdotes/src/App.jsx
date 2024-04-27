@@ -1,25 +1,32 @@
 import { useState } from "react";
 
 //*FUNCIONES
-function getRandomNumber(array){
+function getRandomNumber(array) {
   //random será un núm entre 0 y 1
-  const random = Math.random()
+  const random = Math.random();
   //tamaño, empezando por 1, del arr
-  const lengthArr = array.length //reducimos en uno por los índices
+  const lengthArr = array.length; //reducimos en uno por los índices
   //Multiplicamos para aumentar el rango del número entero hastá la logitud del arr
-  const multiplied = random * lengthArr
+  const multiplied = random * lengthArr;
   //sacamos solo los números enteros desde 0 hasta la longitud del arr
-  const result = Math.floor(multiplied)
-  
+  const result = Math.floor(multiplied);
+
   // Asegurar que el resultado esté dentro del rango válido de índices
   return result < lengthArr ? result : lengthArr - 1;
 }
+//crear un arr lleno de 0, de longitud acorde a otro arr como parámetro
+function getVote(array) {
+  const lengthArr = array.length;
+  let newVotesArr = new Array(lengthArr);
+  return newVotesArr.fill(0);
+}
 
+//*ARREGLOS
 
 //*COMPONENTES
-const Button = ({handleClick, text}) => {
-  return <button onClick={handleClick}>{text}</button>
-}
+const Button = ({ handleClick, text }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
 
 const App = () => {
   const anecdotes = [
@@ -34,19 +41,25 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
-  
+  let arrVotes = getVote(anecdotes);
+  const [votes, setVotes] = useState(arrVotes);
+
   const handleNextClick = () => {
-    const randomNumber = getRandomNumber(anecdotes) 
-    setSelected(randomNumber)
-    console.log(randomNumber)
-  }
+    const randomNumber = getRandomNumber(anecdotes);
+    setSelected(randomNumber);
+  };
+  const handleVoteClick = () => {
+    const copyVotes = [...votes];
+    copyVotes[selected] = copyVotes[selected] + 1;
+    setVotes(copyVotes);
+  };
   return (
     <>
-      <p>
-      {anecdotes[selected]}
-      </p>
-      <Button handleClick={handleNextClick} text='Next anecdote'/>
+      <p>{anecdotes[selected]}</p>
+      <p>Has {votes[selected]} votes</p>
+      <Button handleClick={handleVoteClick} text="vote" />
+      <Button handleClick={handleNextClick} text="Next anecdote" />
     </>
-  )
+  );
 };
 export default App;
