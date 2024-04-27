@@ -1,26 +1,38 @@
 import { useState } from "react";
-
+/*eslint-disable*/
 const Button = (props) => {
   return <button onClick={props.handleClick}>{props.text}</button>;
 };
 const StaticLine = (props) => {
+  if (props.text==='positive'){
+    return (
+      <tr>
+        <td>
+        {props.text}: {props.value} %
+        </td>
+      </tr>
+    );
+  }
   return (
-    <p>
+    <tr>
+      <td>
       {props.text}: {props.value}
-    </p>
+      </td>
+    </tr>
   );
 };
 const Statistics = (props) => {
-  console.log("Statistics: ", props);
   return (
-    <>
-      <StaticLine text="good" value={props.goodVar} />
-      <StaticLine text="neutral" value={props.neutralVar} />
-      <StaticLine text="bad" value={props.badVar} />
-      <StaticLine text="total" value={props.totalVar} />
-      <StaticLine text="average" value={props.averageVar} />
-      <StaticLine text="positive" value={props.positivePercentVar} />
-    </>
+    <table>
+      <tbody>
+        <StaticLine text="good" value={props.goodVar} />
+        <StaticLine text="neutral" value={props.neutralVar} />
+        <StaticLine text="bad" value={props.badVar} />
+        <StaticLine text="total" value={props.totalVar} />
+        <StaticLine text="average" value={props.averageVar} />
+        <StaticLine text="positive" value={props.positivePercentVar} />
+      </tbody>
+    </table>
   );
 };
 
