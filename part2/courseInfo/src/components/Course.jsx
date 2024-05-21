@@ -1,22 +1,12 @@
-import Note from "./Note";
+import Card from "./Card"
 
-const Course = (props) => {
-  const { course } = props;
-
-  const sumExercises = course.parts.reduce(
-    (pre, act) => pre + act.exercises,
-    0
-  );
-
+const Course = (data) => {
+  const [front, back] = data.data;
   return (
     <>
-      <h1>{course.name}</h1>
-      <ul>
-        {course.parts.map((note) => (
-          <Note key={note.id} note={note} />
-        ))}
-      </ul>
-      <p>total of {sumExercises} exercises</p>
+      <h1>Web development curriculum</h1>
+      <Card props={front}/>
+      <Card props={back}/>
     </>
   );
 };
