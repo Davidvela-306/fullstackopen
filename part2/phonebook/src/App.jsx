@@ -20,11 +20,16 @@ const App = () => {
   const addNote = (event) => {
     event.preventDefault();
     console.log("botón: ", event.target);
-    const newObj = {
-      name: newName,
-      id: persons.length + 1,
-    };
-    setPersons(persons.concat(newObj));
+    const finded = persons.find((person) => person.name === newName.trim());
+    console.log(
+      "%cpart2phonebooksrcApp.jsx:24 finded",
+      "color: #26bfa5;",
+      finded
+    );
+    let newObj = { name: newName.trim(), id: persons.length + 1 };
+    finded != undefined
+      ? alert(`${newName} is already added to phonebook`)
+      : setPersons(persons.concat(newObj));
     setNewName("");
   };
 
