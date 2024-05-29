@@ -1,36 +1,35 @@
 import { useState } from "react";
+import Note from "./components/Note"
 
-const Note = (props) => {
-  console.log(
-    "%cpart2phonebooksrcApp.jsx:4 props Note",
-    "color: #007acc;",
-    props.person
-  );
-  return <p>{props.person.name}</p>;
-};
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas", id: 1 }]);
+  const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas", number: "123456" }]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
-  const handleChangeKeyword = (event) => {
+  const handleChangeName = (event) => {
     console.log("teclado: ", event.target.value);
     setNewName(event.target.value);
+  };
+  const handleChangeNumber = (event) => {
+    console.log("teclado: ", event.target.value);
+    setNewNumber(event.target.value);
   };
   const addNote = (event) => {
     event.preventDefault();
     console.log("botón: ", event.target);
-    const finded = persons.find((person) => person.name === newName.trim());
+    const finded = persons.find((person) => person.name === newName.trim() || person.number === newNumber.trim());
     console.log(
       "%cpart2phonebooksrcApp.jsx:24 finded",
       "color: #26bfa5;",
       finded
     );
-    let newObj = { name: newName.trim(), id: persons.length + 1 };
+    let newObj = { id: persons.length + 1, name: newName.trim(), number: newNumber.trim() };
     finded != undefined
-      ? alert(`${newName} is already added to phonebook`)
+      ? alert(`The name ${newName} or the phone number ${newNumber} is already added to phonebook`)
       : setPersons(persons.concat(newObj));
     setNewName("");
+    setNewNumber("");
   };
 
   return (
@@ -38,7 +37,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addNote}>
         <div>
-          name: <input value={newName} onChange={handleChangeKeyword} />
+          name: <input value={newName} onChange={handleChangeName} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleChangeNumber} />
         </div>
         <div>
           <button type="submit">add</button>
