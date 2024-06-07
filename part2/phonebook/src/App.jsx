@@ -1,5 +1,9 @@
 import { useState } from "react";
-import Note from "./components/Note";
+import Form from "./components/FilterForm";
+import AddPersonForm from "./components/AddPersonForm";
+import Persons from "./components/Persons";
+
+// export default Persons;
 
 const App = () => {
   const [allPersons, setAllPersons] = useState([
@@ -26,8 +30,8 @@ const App = () => {
     setSearchPerson(searchTerm); //usamos searchTerm y no searchPerson, xq estamos dentro del controlador por lo que el val del 2do es uno menor al real
 
     //TODO Filtro por nombres
-    const filteredPersons = allPersons.filter((person) =>
-      person.name.toLowerCase().includes(searchTerm) //todas las que incluyan el seacTerm
+    const filteredPersons = allPersons.filter(
+      (person) => person.name.toLowerCase().includes(searchTerm) //todas las que incluyan el seacTerm
     );
     console.log("filteredPersons: ", filteredPersons);
     setPersons(filteredPersons); //Persons == filteredPersons
@@ -60,30 +64,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        {/* Se maneja el valor del input con un state u un controlador de eventos */}
-        <div>
-          Filtro por nombre:{" "}
-          <input value={searchPersons} onChange={handleChangePerson} />
-        </div>
-        <br />
-      </form>
-      <form onSubmit={handleSumbmitAddNote}>
-        <div>
-          name: <input value={newName} onChange={handleChangeName} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Form
+        searchPersons={searchPersons}
+        handleChangePerson={handleChangePerson}
+      />
+      <AddPersonForm
+        handleSumbmitAddNote={handleSumbmitAddNote}
+        newName={newName}
+        handleChangeName={handleChangeName}
+        newNumber={newNumber}
+        handleChangeNumber={handleChangeNumber}
+      />
       <h2>Numbers</h2>
-      {/* Se muestra person, su estado inicial === All persons, con filtro va cambiando hasta que se añada nueva nota y se muestre todo el contenido */}
-      {persons.map((person) => (
-        <Note key={person.id} person={person} />
-      ))}
+      <Persons persons={persons} />
     </div>
   );
 };
