@@ -1,6 +1,7 @@
 import Note from "../components/Note";
 
 const Persons = ({ persons }) => {
+  console.log("persons : ", persons);
   return (
     <>
       {/* Se muestra person, su estado inicial === All persons, con filtro va cambiando hasta que se añada nueva nota y se muestre todo el contenido */}

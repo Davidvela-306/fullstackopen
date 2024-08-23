@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Form from "./components/FilterForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Persons from "./components/Persons";
@@ -6,16 +7,19 @@ import Persons from "./components/Persons";
 // export default Persons;
 
 const App = () => {
-  const [allPersons, setAllPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
-  const [persons, setPersons] = useState(allPersons); //Se crea una copia para que persistan los datos
+  const [allPersons, setAllPersons] = useState([]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchPersons, setSearchPerson] = useState("");
+
+  const getAllPersons = () => {
+    axios.get("http://localhost:3001/persons").then((res) => {
+      setPersons(res.data);
+      setAllPersons(res.data);
+    });
+  };
+  useEffect(getAllPersons, []);
 
   const handleChangeName = (event) => {
     setNewName(event.target.value);
