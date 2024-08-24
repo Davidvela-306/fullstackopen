@@ -48,7 +48,6 @@ const App = () => {
         person.name === newName.trim() || person.number === newNumber.trim()
     );
     let newObj = {
-      id: allPersons.length + 1,
       name: newName.trim(),
       number: newNumber.trim(),
     };
@@ -64,6 +63,19 @@ const App = () => {
     }
     setNewName("");
     setNewNumber("");
+  };
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Do you really want to delete: ${name}?`)) {
+      personsService
+        .remove(id)
+        .then(() => {
+          setAllPersons(allPersons.filter((person) => person.id !== id));
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -81,7 +93,7 @@ const App = () => {
         handleChangeNumber={handleChangeNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={persons} deletePerson={deletePerson} />
     </div>
   );
 };

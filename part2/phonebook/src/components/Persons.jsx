@@ -1,12 +1,17 @@
 import Note from "../components/Note";
+import Button from "./Button";
 
-const Persons = ({ persons }) => {
-  console.log("persons : ", persons);
+const Persons = ({ persons, deletePerson }) => {
   return (
     <>
-      {/* Se muestra person, su estado inicial === All persons, con filtro va cambiando hasta que se añada nueva nota y se muestre todo el contenido */}
       {persons.map((person) => (
-        <Note key={person.id} person={person} />
+        <div key={person.id} style={{ display: "flex" }}>
+          <Note person={person} />
+          <Button
+            text="delete"
+            onClick={() => deletePerson(person.id, person.name)}
+          />
+        </div>
       ))}
     </>
   );
