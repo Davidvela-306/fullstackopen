@@ -63,23 +63,19 @@ const App = () => {
         personsService
           .update(id, updatedContact)
           .then(
-            setAllPersons(
-              allPersons.map((person) =>
-                person.name === newName ? updatedContact : person
-              )
-            ),
-            setPersons(
-              allPersons.map((person) =>
-                person.name === newName ? updatedContact : person
-              )
-            ),
+            setRender(!render),
             setMessage({
               message: "El contacto ha sido actualizado con éxito",
               type: "succes",
             })
           )
-          .catch((err) =>
-            setMessage({ message: `${err.message}`, type: "error" })
+          .catch(
+            (err) =>
+              setMessage({
+                message: `The user ${newName} has previously been removed from the server.`,
+                type: "error",
+              }),
+            setRender(!render)
           );
         setTimeout(() => setMessage({ message: null, type: null }), 6000);
       }
@@ -87,16 +83,16 @@ const App = () => {
       // Dado que id se establece en el server y se lo obtiene en un nuevo render, se opta por crear este artificio setRender
       personsService
         .create(newObj)
-        .then(setRender(!render))
         .then(
           setMessage({
-            message: "ha añadido un nuevo usuario con éxito",
+            message: "has successfully added a new user",
             type: "succes",
           })
         )
         .catch((err) =>
           setMessage({ message: `${err.message}`, type: "error" })
         );
+      setRender(!render);
       setTimeout(() => setMessage({ message: null, type: null }), 6000);
     }
     setNewName("");
@@ -106,13 +102,20 @@ const App = () => {
     if (window.confirm(`Do you really want to delete: ${name}?`)) {
       personsService
         .remove(id)
-        .then(() => {
-          setAllPersons(allPersons.filter((person) => person.id !== id));
-          setPersons(persons.filter((person) => person.id !== id));
-        })
-        .catch((error) => {
-          console.log(error);
+        .then(
+          setMessage({
+            message: `The user ${name} has been removed from the server`,
+            type: "succes",
+          })
+        )
+        .catch((err) => {
+          setMessage({
+            message: `The user ${name} has previously been removed from the server.`,
+            type: "error",
+          });
         });
+      setRender(!render);
+      setTimeout(() => setMessage({ message: null, type: null }), 6000);
     }
   };
 
