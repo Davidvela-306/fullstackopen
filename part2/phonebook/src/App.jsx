@@ -3,7 +3,7 @@ import personsService from "./services/persons";
 import Form from "./components/FilterForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Persons from "./components/Persons";
-
+import Notification from "./components/Notification";
 const App = () => {
   const [render, setRender] = useState(false);
   const [allPersons, setAllPersons] = useState([]);
@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchPersons, setSearchPerson] = useState("");
+  const [message, setMessage] = useState({ message: null, type: null });
 
   const getAllPersons = () => {
     personsService.getAll().then((persons) => {
@@ -43,42 +44,60 @@ const App = () => {
 
   const handleSumbmitAddNote = (event) => {
     event.preventDefault();
-    const finded = allPersons.find(
-      (person) =>
-        person.name === newName.trim() || person.number === newNumber.trim()
-    );
+    const finded = allPersons.find((person) => person.name === newName.trim());
 
     let newObj = {
       name: newName.trim(),
       number: newNumber.trim(),
     };
-
+    /* if el contacto existe, else no existe */
     if (finded) {
       const { id } = finded;
+
       if (
         window.confirm(
           `The name ${newName} already exist in your contacts, do you want to replace it?`
         )
       ) {
+        const updatedContact = { id, ...newObj };
         personsService
-          .update(id, { id, ...newObj })
+          .update(id, updatedContact)
           .then(
             setAllPersons(
               allPersons.map((person) =>
-                person.name === newName ? newObj : person
+                person.name === newName ? updatedContact : person
               )
             ),
             setPersons(
               allPersons.map((person) =>
-                person.name === newName ? newObj : person
+                person.name === newName ? updatedContact : person
               )
-            )
+            ),
+            setMessage({
+              message: "El contacto ha sido actualizado con éxito",
+              type: "succes",
+            })
           )
-          .catch((err) => console.error(err));
+          .catch((err) =>
+            setMessage({ message: `${err.message}`, type: "error" })
+          );
+        setTimeout(() => setMessage({ message: null, type: null }), 6000);
       }
     } else {
       // Dado que id se establece en el server y se lo obtiene en un nuevo render, se opta por crear este artificio setRender
-      personsService.create(newObj).then(setRender(!render));
+      personsService
+        .create(newObj)
+        .then(setRender(!render))
+        .then(
+          setMessage({
+            message: "ha añadido un nuevo usuario con éxito",
+            type: "succes",
+          })
+        )
+        .catch((err) =>
+          setMessage({ message: `${err.message}`, type: "error" })
+        );
+      setTimeout(() => setMessage({ message: null, type: null }), 6000);
     }
     setNewName("");
     setNewNumber("");
@@ -100,6 +119,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message.message} type={message.type} />
       <Form
         searchPersons={searchPersons}
         handleChangePerson={handleChangePerson}
