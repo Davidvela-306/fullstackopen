@@ -4,9 +4,8 @@ import Form from "./components/FilterForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Persons from "./components/Persons";
 
-// export default Persons;
-
 const App = () => {
+  const [render, setRender] = useState(false);
   const [allPersons, setAllPersons] = useState([]);
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -19,7 +18,7 @@ const App = () => {
       setAllPersons(persons);
     });
   };
-  useEffect(getAllPersons, []);
+  useEffect(getAllPersons, [render]);
 
   const handleChangeName = (event) => {
     setNewName(event.target.value);
@@ -39,6 +38,7 @@ const App = () => {
     );
     console.log("filteredPersons: ", filteredPersons);
     setPersons(filteredPersons); //Persons == filteredPersons
+    console.log("persons: ", persons);
   };
 
   const handleSumbmitAddNote = (event) => {
@@ -47,19 +47,38 @@ const App = () => {
       (person) =>
         person.name === newName.trim() || person.number === newNumber.trim()
     );
+
     let newObj = {
       name: newName.trim(),
       number: newNumber.trim(),
     };
+
     if (finded) {
-      alert(
-        `The name ${newName} or the phone number ${newNumber} is already added to phonebook`
-      );
+      const { id } = finded;
+      if (
+        window.confirm(
+          `The name ${newName} already exist in your contacts, do you want to replace it?`
+        )
+      ) {
+        personsService
+          .update(id, { id, ...newObj })
+          .then(
+            setAllPersons(
+              allPersons.map((person) =>
+                person.name === newName ? newObj : person
+              )
+            ),
+            setPersons(
+              allPersons.map((person) =>
+                person.name === newName ? newObj : person
+              )
+            )
+          )
+          .catch((err) => console.error(err));
+      }
     } else {
-      personsService.create(newObj).then((newPerson) => {
-        setAllPersons([...allPersons, newPerson]);
-        setPersons([...allPersons, newPerson]);
-      });
+      // Dado que id se establece en el server y se lo obtiene en un nuevo render, se opta por crear este artificio setRender
+      personsService.create(newObj).then(setRender(!render));
     }
     setNewName("");
     setNewNumber("");
