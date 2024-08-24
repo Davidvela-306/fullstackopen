@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personsService from "./services/persons";
 import Form from "./components/FilterForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Persons from "./components/Persons";
@@ -14,9 +14,9 @@ const App = () => {
   const [searchPersons, setSearchPerson] = useState("");
 
   const getAllPersons = () => {
-    axios.get("http://localhost:3001/persons").then((res) => {
-      setPersons(res.data);
-      setAllPersons(res.data);
+    personsService.getAll().then((persons) => {
+      setPersons(persons);
+      setAllPersons(persons);
     });
   };
   useEffect(getAllPersons, []);
@@ -57,9 +57,10 @@ const App = () => {
         `The name ${newName} or the phone number ${newNumber} is already added to phonebook`
       );
     } else {
-      const updatedPersons = allPersons.concat(newObj);
-      setAllPersons(updatedPersons); //se añade a AllPersons
-      setPersons(updatedPersons); //como es una copia, tambien en persons
+      personsService.create(newObj).then((newPerson) => {
+        setAllPersons([...allPersons, newPerson]);
+        setPersons([...allPersons, newPerson]);
+      });
     }
     setNewName("");
     setNewNumber("");
