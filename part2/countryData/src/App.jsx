@@ -14,9 +14,8 @@ const App = () => {
       .then((countries) => setAllCountries(countries))
       .catch((err) => console.error(err));
   };
-  const handleChangeValue = (e) => {
+  const handleChangeValue = (e, searchCountry = e.target.value) => {
     e.preventDefault();
-    const searchCountry = e.target.value;
     setSearchValue(e.target.value);
     const countries = allCountries.filter((country) => {
       return country.name.common
@@ -37,7 +36,10 @@ const App = () => {
         searchValue={searchValue}
         handleChangeValue={handleChangeValue}
       />
-      <MatchList countriesFound={countriesFound} />
+      <MatchList
+        countriesFound={countriesFound}
+        handleChangeValue={handleChangeValue}
+      />
     </>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-const MatchList = ({ countriesFound }) => {
+const MatchList = ({ countriesFound, handleChangeValue }) => {
   if (!countriesFound) return null;
 
   return (
@@ -42,7 +42,19 @@ const MatchList = ({ countriesFound }) => {
         })
       ) : (
         countriesFound.map((country) => {
-          return <p key={country.name.common}>{country.name.common}</p>;
+          return (
+            <div
+              style={{ display: "flex", gap: "10px", margin: "10px" }}
+              key={country.name.common}
+            >
+              <p>{country.name.common}</p>
+              <button
+                onClick={(e) => handleChangeValue(e, country.name.common)}
+              >
+                show
+              </button>
+            </div>
+          );
         })
       )}
     </>
