@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
-const MatchList = ({ countriesFound, handleChangeValue }) => {
+const MatchList = ({ countriesFound, weather, handleChangeValue }) => {
   if (!countriesFound) return null;
 
   return (
     <>
       {countriesFound.length > 10 ? (
         <p>Too many matches, specify another filter</p>
-      ) : countriesFound.length === 1 ? (
+      ) : countriesFound.length === 1 && weather ? (
         countriesFound.map((country) => {
           return (
             <div key={country.name.common}>
               <h1>{country.name.common}</h1>
-              <p>capital {country.capital[0]}</p>
-              <p>Area {country.area}</p>
+              <p>capital: {country.capital[0]}</p>
+              <p>Area: {country.area}</p>
               <br />
               <h2>Languages</h2>
               <ul>
@@ -32,11 +32,20 @@ const MatchList = ({ countriesFound, handleChangeValue }) => {
                 style={{
                   width: "250px",
                   boxShadow: "0 0 10px gray",
-                  padding: "10px",
                 }}
                 src={country.flags.png}
                 alt={`flag of ${country.flags.alt}`}
               />
+              <br />
+              <br />
+              <h2>Weather in {country.capital}:</h2>
+              <p>temperature: {weather.main.temp} °C</p>
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                alt={weather.weather[0].main}
+              />
+              <p>weather: {weather.weather[0].description}</p>
+              <p>wind: {weather.wind.speed} m/s</p>
             </div>
           );
         })
