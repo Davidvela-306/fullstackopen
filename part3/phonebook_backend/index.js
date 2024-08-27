@@ -4,7 +4,7 @@ const app = express();
 // Sin json-parser, la propiedad body no estaría definida.
 app.use(express.json()); //de json a obj
 
-let persons = [
+let people = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -30,8 +30,15 @@ app.get("/", (request, response) => {
   response.send("<h2>Phonebook API RestFull</h2>");
 });
 
+app.get("/info", async (req, res) => {
+  const date = new Date();
+  res.send(
+    `<p>Phonebook has info for ${people.length} people</p></br><p>Date: ${date}</p>`
+  );
+});
+
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  res.json(people);
 });
 
 const PORT = 3001;
