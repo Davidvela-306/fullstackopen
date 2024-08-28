@@ -45,10 +45,22 @@ app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   const person = people.find((p) => p.id === id);
   if (!person) {
-    res.statusMessage = 'Resource not found'
+    res.statusMessage = "Resource not found";
     res.status(400).end();
   }
   res.json({ person });
+});
+
+// app.delete("/api/persons/:id", (req, res) => {
+//   const id = Number(req.params.id);
+//   const person = people.find((p) => p.id === id);
+//   console.log('person: ', person);
+// });
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const person = people.filter((person) => person.id !== id);
+  res.statusMessage = "Resource deleted";
+  res.status(204).end();
 });
 
 const PORT = 3001;
