@@ -51,11 +51,6 @@ app.get("/api/persons/:id", (req, res) => {
   res.json({ person });
 });
 
-// app.delete("/api/persons/:id", (req, res) => {
-//   const id = Number(req.params.id);
-//   const person = people.find((p) => p.id === id);
-//   console.log('person: ', person);
-// });
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   const person = people.filter((person) => person.id !== id);
@@ -67,12 +62,20 @@ app.post("/api/persons", (req, res) => {
   const maxId = people.length > 0 ? Math.max(...people.map((p) => p.id)) : 0;
 
   const person = req.body;
-  
-  person.id = maxId + 1;
+  const existingPerson = people.find((p) => p.name === person.name);
+  console.log("body name: ", person.name);
+  console.log("body number: ", person.number);
+  console.log("existingPerson: ", existingPerson);
 
-  people = people.concat(person);
-
-  res.json(person);
+  if (!existingPerson && person.name && person.number) {
+    person.id = maxId + 1;
+    people = people.concat(person);
+    res.json(person);
+  } else {
+    res
+      .status(400)
+      .json({ error: "name must be unique and all fields must be filled" });
+  }
 });
 
 const PORT = 3001;
