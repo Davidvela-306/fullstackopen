@@ -4,7 +4,14 @@ const app = express();
 
 // Sin json-parser, la propiedad body no estaría definida.
 app.use(express.json()); //de json a obj
-app.use(morgan('tiny'));
+morgan.token("type", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :type")
+);
+
 let people = [
   {
     id: 1,
@@ -64,9 +71,6 @@ app.post("/api/persons", (req, res) => {
 
   const person = req.body;
   const existingPerson = people.find((p) => p.name === person.name);
-  console.log("body name: ", person.name);
-  console.log("body number: ", person.number);
-  console.log("existingPerson: ", existingPerson);
 
   if (!existingPerson && person.name && person.number) {
     person.id = maxId + 1;
