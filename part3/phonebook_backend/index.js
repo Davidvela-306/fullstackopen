@@ -1,9 +1,10 @@
 const express = require("express");
+const morgan=require("morgan");
 const app = express();
 
 // Sin json-parser, la propiedad body no estaría definida.
 app.use(express.json()); //de json a obj
-
+app.use(morgan('tiny'));
 let people = [
   {
     id: 1,
