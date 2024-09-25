@@ -1,9 +1,10 @@
-const express = require("express");
-const morgan=require("morgan");
+const express = require("express"); //usar express en vez de http
+const morgan = require("morgan"); //usar morgan para ver peticiones
+const cors = require("cors"); //usar cors para permitir peticiones de otros dominios
 const app = express();
 
 // Sin json-parser, la propiedad body no estaría definida.
-app.use(express.json()); //de json a obj
+app.use(express.json()); //de json a obj en req.body
 morgan.token("type", function (req, res) {
   return JSON.stringify(req.body);
 });
@@ -12,6 +13,7 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :type")
 );
 
+app.use(cors());
 let people = [
   {
     id: 1,
@@ -34,6 +36,8 @@ let people = [
     number: "39-23-6423122",
   },
 ];
+app.use(express.static("dist")); // usar express.static para servir archivos estáticos (HTML, CSS, JS, etc.)
+
 app.get("/", (request, response) => {
   response.send("<h2>Phonebook API RestFull</h2>");
 });
@@ -62,6 +66,10 @@ app.get("/api/persons/:id", (req, res) => {
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   const person = people.filter((person) => person.id !== id);
+  if (!person) {
+    res.statusMessage = "Resource not found";
+    res.status(400).end();
+  }
   res.statusMessage = "Resource deleted";
   res.status(204).end();
 });
@@ -83,7 +91,7 @@ app.post("/api/persons", (req, res) => {
   }
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
